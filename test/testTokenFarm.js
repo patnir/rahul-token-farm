@@ -73,7 +73,7 @@ contract("TokenFarm", ([owner, investor]) => {
         "investor has no tokens after staking"
       );
 
-      result = await tokenFarm.stackingBalance(investor);
+      result = await tokenFarm.stakingBalance(investor);
       assert.equal(
         result.toString(),
         tokens("100"),
@@ -82,6 +82,29 @@ contract("TokenFarm", ([owner, investor]) => {
 
       result = await tokenFarm.isStaking(investor);
       assert.equal(result.toString(), "true", "investor has 100 dai staked");
+
+      await tokenFarm.issueTokens({ from: owner });
+
+      result = await r8iToken.balanceOf(investor);
+      assert.equal(result.toString(), tokens("100"));
+
+      await tokenFarm.issueTokens({ from: investor }).should.be.rejected;
+
+      await tokenFarm.unstakeTokens({ from: investor });
+
+      result = await daiToken.balanceOf(investor);
+      assert.equal(
+        result.toString(),
+        tokens("100"),
+        "investor withdrew all dai"
+      );
+
+      result = await r8iToken.balanceOf(investor);
+      assert.equal(
+        result.toString(),
+        tokens("100"),
+        "investor withdrew all r8i"
+      );
     });
   });
 });

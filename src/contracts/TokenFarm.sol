@@ -17,6 +17,7 @@ contract TokenFarm {
     constructor(R8IToken _r8iToken, DaiToken _daiToken) public {
         daiToken = _daiToken;
         r8iToken = _r8iToken;
+        owner = msg.sender;
     }
 
     function stakeTokens(uint256 _amount) public {
@@ -40,5 +41,13 @@ contract TokenFarm {
                 r8iToken.transfer(recipient, balance);
             }
         }
+    }
+
+    function unstakeTokens() public {
+        uint256 balance = stakingBalance[msg.sender];
+        require(balance > 0, "staking balance cannot be 0");
+        daiToken.transfer(msg.sender, balance);
+        stakingBalance[msg.sender] = 0;
+        isStaking[msg.sender] = false;
     }
 }
