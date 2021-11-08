@@ -8,6 +8,8 @@ class Navbar extends Component {
         <a
           className="navbar-brand col-sm-3 col-md-2 mr-0"
           target="_blank"
+          style={{ color: "white" }}
+          href="./"
           rel="noopener noreferrer"
         >
           <img
